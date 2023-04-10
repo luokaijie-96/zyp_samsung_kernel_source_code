@@ -14,7 +14,8 @@
 #define __ASM_ARCH_MEMORY_H
 
 #if defined(CONFIG_MACH_SMDKV210)
-#define PHYS_OFFSET		UL(0x20000000)
+/* PHYS_OFFSET		UL(0x20000000)  uboot 中将内存地址设置为 0x3000_0000 ~ 0x4000_0000  */
+#define PHYS_OFFSET		UL(0x30000000)  
 #else
 #define PHYS_OFFSET		UL(0x30000000)
 #endif
