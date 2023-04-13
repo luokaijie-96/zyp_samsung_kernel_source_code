@@ -654,6 +654,7 @@ EXPORT_SYMBOL(s3c_setup_keypad_cfg_gpio);
 #ifdef CONFIG_DM9000
 static void __init smdkc110_dm9000_set(void)
 {
+#if 0
 	unsigned int tmp;
 
 	tmp = ((0<<28)|(0<<24)|(5<<16)|(0<<12)|(0<<8)|(0<<4)|(0<<0));
@@ -670,6 +671,50 @@ static void __init smdkc110_dm9000_set(void)
 	tmp |= (2 << 20);
 
 	__raw_writel(tmp, S5PV210_MP01CON);
+#endif
+
+	unsigned int tmp;
+
+	/* initial dm9000 interrupt */
+	// lqm added.
+	int ret;
+	/* Input mode */
+	s3c_gpio_cfgpin(S5PV210_GPH1(2), S3C_GPIO_INPUT);
+	s3c_gpio_setpull(S5PV210_GPH1(2), S3C_GPIO_PULL_NONE);
+
+	ret = gpio_request(S5PV210_GPH1(2), "GPH1");
+	if(ret)
+		printk("mach-x210: request gpio GPH1(2) fail");
+	else
+	{
+		s3c_gpio_cfgpin(S5PV210_GPH1(2), 0xf);
+		s3c_gpio_setpull(S5PV210_GPH1(2), S3C_GPIO_PULL_NONE);
+	}
+
+	tmp = ((0<<28)|(0<<24)|(5<<16)|(0<<12)|(0<<8)|(0<<4)|(0<<0));
+	//CS5
+	//__raw_writel(tmp, (S5P_SROM_BW+0x18));
+	//CS1
+	__raw_writel(tmp, S5P_SROM_BC1);
+
+	tmp = __raw_readl(S5P_SROM_BW);
+	//CS5
+	//tmp &= ~(0xf << 20);
+	//tmp |= (0x1 << 20); // dm9000 16bit
+	//CS1
+	tmp &= ~(0xf << 4);
+	tmp |= (1<<7) | (1<<6) | (1<<5) | (1<<4); // dm9000 16bit
+	__raw_writel(tmp, S5P_SROM_BW);
+
+	tmp = __raw_readl(S5PV210_MP01CON);
+	tmp &= ~(0xf << 4);
+	tmp |= (2 << 4);
+
+	__raw_writel(tmp, S5PV210_MP01CON);
+
+
+
+
 }
 #endif
 
