@@ -20,6 +20,9 @@ cp /mnt/hgfs/linux_win_shared/android-kernel-samsung-dev/arch/arm/configs/smdkv2
 
 
 
+cp /mnt/hgfs/linux_win_shared/android-kernel-samsung-dev/arch/arm/kernel/head.S   arch/arm/kernel/head.S -rf 
+
+
 make smdkv210_android_defconfig
 
 
